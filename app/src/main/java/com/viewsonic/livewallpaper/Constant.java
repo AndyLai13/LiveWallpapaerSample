@@ -1,4 +1,4 @@
-package com.viewsonic.vlauncher.livewallpaper;
+package com.viewsonic.livewallpaper;
 
 public class Constant {
 	public static final String BROADCAST_SET_VIDEO_PARAM = "broadcast_set_video_param";

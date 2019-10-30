@@ -1,9 +1,8 @@
-package com.viewsonic.vlauncher.livewallpaper;
+package com.viewsonic.livewallpaper;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class LoopMediaPlayer {

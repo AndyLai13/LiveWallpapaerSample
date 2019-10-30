@@ -1,4 +1,4 @@
-package com.viewsonic.vlauncher.livewallpaper;
+package com.viewsonic.livewallpaper;
 
 import org.junit.Test;
 
