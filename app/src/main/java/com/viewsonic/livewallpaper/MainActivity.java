@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 				mTriangle = new GL.Triangle();
 				// 初始化 square
 				mSquare = new GL.Square();
+
 			}
 
 			private float[] mRotationMatrix = new float[16];
@@ -77,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
 				Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
 //				// Draw shape
-				mTriangle.draw(mMVPMatrix);
-
+//				mTriangle.draw(mMVPMatrix);
+				mSquare.draw();
 
 //				// 创建一个旋转矩阵
 //				long time = SystemClock.uptimeMillis() % 4000L;
@@ -91,8 +92,10 @@ public class MainActivity extends AppCompatActivity {
 //				Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
 //
 //				// Draw triangle
-				mTriangle.draw(scratch);
+//				mTriangle.draw(scratch);
+
 			}
+
 
 			private final float[] mMVPMatrix = new float[16];
 			private final float[] mProjectionMatrix = new float[16];
