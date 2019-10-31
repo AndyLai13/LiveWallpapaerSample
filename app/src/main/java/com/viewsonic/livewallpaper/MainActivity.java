@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 		class MyGLRenderer implements GLSurfaceView.Renderer {
 			private GL.Triangle mTriangle;
 			private GL.Square mSquare;
+			private GL.Pizza mPizza;
 
 			@Override
 			public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 				mTriangle = new GL.Triangle();
 				// 初始化 square
 				mSquare = new GL.Square();
+				mPizza = new GL.Pizza();
 
 			}
 
@@ -72,14 +74,26 @@ public class MainActivity extends AppCompatActivity {
 				float[] scratch = new float[16];
 
 				// Set the camera position (View matrix)
+
+				float eyeX = 0f;
+				float eyeY = 0f;
+				float eyeZ = -3f;
+				float centerX = 0f;
+				float centerY = 0f;
+				float centerZ = 0f;
+				float upX = 0f;
+				float upY = 1f;
+				float upZ = 0f;
 				Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+//				Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 
 				// Calculate the projection and view transformation
 				Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
 //				// Draw shape
 //				mTriangle.draw(mMVPMatrix);
-				mSquare.draw();
+//				mSquare.draw(mMVPMatrix);
+				mPizza.draw(mMVPMatrix);
 
 //				// 创建一个旋转矩阵
 //				long time = SystemClock.uptimeMillis() % 4000L;
