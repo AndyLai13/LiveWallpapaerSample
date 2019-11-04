@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".VideoWallPaperService"
+            android:name=".EduWallPaperService"
             android:permission="android.permission.BIND_WALLPAPER">
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
