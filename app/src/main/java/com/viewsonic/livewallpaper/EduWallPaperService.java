@@ -1,5 +1,7 @@
 package com.viewsonic.livewallpaper;
 
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -7,11 +9,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.service.wallpaper.WallpaperService;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import androidx.core.content.ContextCompat;
 
 public class EduWallPaperService extends WallpaperService {
 
@@ -25,8 +32,6 @@ public class EduWallPaperService extends WallpaperService {
 	@SuppressWarnings({"FieldCanBeLocal", "WeakerAccess", "unused"})
 	private class EduEngine extends Engine {
 		private Paint paint = new Paint();
-		private int mWidth;
-		private int mHeight;
 		private boolean mVisible = true;
 		private Bitmap mBitmapBG;
 
@@ -48,6 +53,7 @@ public class EduWallPaperService extends WallpaperService {
 
 		private HandlerThread thread = new HandlerThread("WallPaperService");
 		private Handler handler;
+		private int bgDrawable;
 		private final Runnable drawRunner = new Runnable() {
 			@Override
 			public void run() {
@@ -56,7 +62,7 @@ public class EduWallPaperService extends WallpaperService {
 		};
 
 		public EduEngine() {
-			mBitmapBG = BitmapFactory.decodeResource(getResources(), R.mipmap.gra_bg_gradual);
+			bgDrawable = R.drawable.ic_gra_bg_gradual;
 		}
 
 		@Override
@@ -89,6 +95,7 @@ public class EduWallPaperService extends WallpaperService {
 				int width, int height) {
 			super.onSurfaceChanged(holder, format, width, height);
 			determineShapeSize(width, height);
+			mBitmapBG = getBitmap(getApplicationContext(), bgDrawable, height, width);
 		}
 
 		private void determineShapeSize(int width, int height) {
@@ -100,11 +107,11 @@ public class EduWallPaperService extends WallpaperService {
 				mSideLength = (int) (1.06 * width);
 				mHalfSideLength = mSideLength / 2;
 				// Config for circle
-				mRotationPivot2[0] = (int) (0.23 * width);
-				mRotationPivot2[1] = (int) (0.81 * width);
-				mOffset[0] = (int) (-0.03 * width);
-				mOffset[1] = (int) (0.03 * width);
-				mRadius = (int) (0.57 * width);
+				mRotationPivot2[0] = (int) (0.18 * width);
+				mRotationPivot2[1] = (int) (0.9 * width);
+				mOffset[0] = (int) (-0.01 * width);
+				mOffset[1] = (int) (0.01 * width);
+				mRadius = (int) (0.6 * width);
 
 				Log.d(TAG, "\n" +
 						"mRotationPivot1 = " + mRotationPivot1[0] + ", " + mRotationPivot1[1] + "\n" +
@@ -119,12 +126,13 @@ public class EduWallPaperService extends WallpaperService {
 
 		private synchronized void draw() {
 			calculateRotationDegree();
+			rotationRgDegree();
 			SurfaceHolder holder = getSurfaceHolder();
 			Canvas canvas = null;
 			paint.setColor(Color.WHITE);
 			paint.setAntiAlias(true);
 			paint.setFilterBitmap(true);
-			paint.setAlpha(30);
+			paint.setAlpha(15);
 
 			try {
 				canvas = holder.lockCanvas();
@@ -167,8 +175,35 @@ public class EduWallPaperService extends WallpaperService {
 
 		private void calculateRotationDegree() {
 			mDegree = (mDegree + 1) % 360;
-			mDegree1 = mDegree * 0.1f;
 			mDegree2 = mDegree;
+		}
+
+		private void rotationRgDegree() {
+			if (mDegree1 < 360) {
+				mDegree1 = mDegree1 + 0.1f;
+			} else {
+				mDegree1 = 0;
+			}
+		}
+
+		@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+		private Bitmap getBitmap(VectorDrawable vectorDrawable, int height, int Width) {
+			Bitmap bitmap = Bitmap.createBitmap(Width, height, Bitmap.Config.ARGB_8888);
+			Canvas canvas = new Canvas(bitmap);
+			vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+			vectorDrawable.draw(canvas);
+			return bitmap;
+		}
+
+		private Bitmap getBitmap(Context context, int drawableId, int height, int width) {
+			Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+			if (drawable instanceof BitmapDrawable) {
+				return BitmapFactory.decodeResource(context.getResources(), drawableId);
+			} else if (drawable instanceof VectorDrawable) {
+				return getBitmap((VectorDrawable) drawable, height, width);
+			} else {
+				throw new IllegalArgumentException("unsupported drawable type");
+			}
 		}
 	}
 }
